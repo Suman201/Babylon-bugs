@@ -9,6 +9,7 @@
   "author": "sayan",
   "license": "ISC",
   "dependencies": {
-    "@babylonjs/core": "^5.46.0"
+    "@babylonjs/core": "^5.46.0",
+    "@babylonjs/loaders": "^5.50.1"
   }
 }

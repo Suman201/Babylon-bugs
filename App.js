@@ -26,20 +26,6 @@ const App = () => {
   return (
     <>
       <View style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={() => scene.viewer.addSphere()}
-          style={{
-            position: 'absolute',
-            top: 50,
-            right: 20,
-            zIndex:2,
-            height: 50,
-            width: 75,
-            backgroundColor: 'red',
-            justifyContent:"center", alignItems:"center"
-          }}>
-          <Text>Click Here</Text>
-        </TouchableOpacity>
         <EngineView
           displayFrameRate={true}
           removeClippedSubviews={true}

@@ -10,7 +10,10 @@ import {
   StandardMaterial,
   SpriteManager,
   Sprite,
+  SceneLoader,
+  AssetsManager,
 } from '@babylonjs/core';
+import "@babylonjs/loaders/glTF";
 
 export function IViewer(t, c) {
   this.data = t;
@@ -56,7 +59,7 @@ export function Main(e) {
    ]
   this.canvasPixelRatio=window.devicePixelRatio;
   this.meshes = {}
-  
+  this.imgPath = 'https://dedicateddevelopers.us/babylon-suman/';
 
 
 
@@ -68,60 +71,33 @@ export function Main(e) {
 
 
    Object.setPrototypeOf(this, {
-    customPattern:(e)=>{  
-      for (let w = 0; w < e.width; w += e.image.width)
-            for (let h = 0; h < e.height; h += e.image.height)
-              e.ctx.clearRect(0, 0, w, h), e.ctx.drawImage(e.image, w, h);
-    },
-    loadImages:(e)=>{
-      for (let index = 0; index < e.length; index++) {
-        const element = e[index];
-        const s = this.engine.createCanvasImage();
-        s.src = element.url;
-        s.onload=()=>{
-          this.images[element.url] = s
-        }
-      }
-     },
 
-    updateDynamicTexture:(e)=>{      
-      const x = {
-        image: this.images['https://playground.babylonjs.com/textures/grass.png'], width: e.w, height: e.h, ctx: e.ctx
-      }
-      this.customPattern(x);  
+    loadModel: () => {
+
+      const m = MeshBuilder.CreateGround('ground', {width:50, height:50}, this.scene);
+
+
+      // Append to the scene
+      SceneLoader.Append(this.imgPath, 'numbers.gltf', this.scene, (object) => {
+        console.log(object, 'object');
+      })
+
+      // const assetManager = new AssetsManager(this.scene);
+      // const gltfTask = assetManager.addMeshTask('gltf task', '', this.imgPath, 'numbers.gltf');
+      // gltfTask.onSuccess = (task) => {
+      //   console.log(task, 'task');
+      //   // Access the loaded mesh from the task's loaded meshes array
+      //   // const mesh = task.loadedMeshes[0];
       
-     },
-     addSphere:  () => {
-      for (let index = 0; index < 100; index++) {
-        if(!this.meshes[`spare${index}`]){
-          const s =  new MeshBuilder.CreateSphere(`spare${index}`, {diameter:2}, this.scene);
-          s.position = new Vector3(Math.random() * (20 - -10) + -10, 0, Math.random() * (20 - -10) + -10) ;
-          s.material=this.material.clone();
-          const t =  new DynamicTexture('texture', {width:512, height:512}, this.scene, true);
-          const data= {ctx:t.getContext('2D'), w: 512, h: 512, id: "texture_", t: t};
-          this.updateDynamicTexture(data), 
-          s.material.diffuseTexture = t; t.update();
-          this.meshes[`spare${index}`] = s;
-        } else {
-          let e = this.meshes[`spare${index}`], size = {};
-          e.material && e.material.diffuseTexture && ( size = e.material.diffuseTexture.getSize(), e.material.diffuseTexture.getContext
-          ('2d').clearRect(0,0,size.width, size.height), e.material.diffuseTexture._canvas && (e.material.diffuseTexture._canvas = null), e.material.diffuseTexture.dispose(),
-          e.material.diffuseTexture = null      
-          );
+      //   // Do something with the mesh, such as adding it to the scene
+      //   // scene.addMesh(mesh);
+      // };
+      // assetManager.load();
+    }
 
-          setTimeout(() => {
-            const t = new DynamicTexture('texture', {width:512, height:512}, this.scene, true)
-            const data = {ctx: t.getContext('2D'), w: 512, h: 512, id: "texture_", t: t};
-            this.updateDynamicTexture(data), 
-            e.material.diffuseTexture = t, t.update();
-          }, 100);
-        
-        }
-        
-       
-      }
-     },
+
+
    })
-   this.loadImages(images)
+   this.loadModel()
 
 }
